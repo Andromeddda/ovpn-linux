@@ -17,10 +17,9 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/Andromeddda/ovpn-linux.git',
-
-     entry_points={
+    entry_points={
         'console_scripts': [
-            'my-ovpn=src.main:run',  # Замените my_app.main:main на фактическую точку входа
+            'my-ovpn=main:run',
         ],
     }
 )

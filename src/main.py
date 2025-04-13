@@ -16,7 +16,7 @@ def read_json(file):
     
     
 def run():
-    strings = read_json('strings.json')
+    strings = read_json('src/strings.json')
 
     vpn_page_url = strings['url']
 
