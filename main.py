@@ -1,3 +1,4 @@
+import time
 import pages
 from pages import Connection
 from bs4 import BeautifulSoup
@@ -13,27 +14,27 @@ def get_vpn_page_url():
         return F.readline()
     
 def connection_is_good(connection: Connection):
-    return (connection.country == 'Japan') and (connection.delay in range(5, 20)) and ('udp' in connection.url)
+    return (connection.country == 'Japan') and (connection.delay in range(1, 20)) and ('udp' in connection.url)
 
 
 def try_decrator(process):
     def result(ret: bool, *args) -> bool:
         try:
-            process(args)
+            process(*args)
             ret = True
         except:
             ret = False
     return result
 
 
-def try_timeout(process, *args):
+def try_timeout(process, *arg):
     func = try_decrator(process)
 
-    ret = False
-    p = multiprocessing.Process(target=func, args=(ret, args))
+    ret = True
+    p = multiprocessing.Process(target=func, args=[ret, *arg])
     p.start()
 
-    p.join(5)
+    p.join(10)
 
     if p.is_alive():
         p.kill()
@@ -56,13 +57,17 @@ def start_vpn(config_url, name, path):
     print(f"Config witten to {path}")
     print(f"Trying to create vpn connection...")
 
-    try:
-        os.system(f'nmcli connection delete {name}')
-    except:
-        pass
+    os.system(f'nmcli connection delete {name}')
+    
+    if(os.system(f'nmcli connection import type openvpn file {path}') != 0):
+        raise "Incorrect configuration"
+    
+    if(os.system(f'nmcli connection up {name}') != 0):
+        raise "Cannot connect to vpn server"
 
-    os.system(f'nmcli connection import type openvpn file {path}')
-    os.system(f'nmcli connection up {name}')
+def say(n):
+    print(n)
+    time.sleep(1)
 
 
 if __name__ == "__main__":
@@ -87,6 +92,7 @@ if __name__ == "__main__":
             print('SUCCESS')
             break
 
+        print()
     
 
 
