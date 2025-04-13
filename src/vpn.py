@@ -15,7 +15,7 @@ def try_decrator(process):
 def try_timeout(process, *arg):
     func = try_decrator(process)
 
-    ret = True
+    ret = bool()
     p = multiprocessing.Process(target=func, args=[ret, *arg])
     p.start()
 

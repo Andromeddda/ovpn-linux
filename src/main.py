@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from requests_html import HTMLSession
 import os
 import json
-import sys
 from vpn import start_vpn, try_timeout
 
 def connection_is_good(connection: Connection):
@@ -15,8 +14,8 @@ def read_json(file):
     with open(file) as F:
         return json.load(F)
     
-
-if __name__ == "__main__":
+    
+def run():
     strings = read_json('strings.json')
 
     vpn_page_url = strings['url']
@@ -37,13 +36,7 @@ if __name__ == "__main__":
         if (try_timeout(start_vpn, connection.url, strings['name'], strings['path'])):
             print('SUCCESS')
             break
-
         print()
-    
 
-
-
-
-
-
-    
+if __name__ == "__main__":
+    run()
